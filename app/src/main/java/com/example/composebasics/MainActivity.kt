@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -46,15 +48,12 @@ fun MyApp(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun MyScreenContent(names: List<String> = listOf("Android", "There")) {
+fun MyScreenContent(names: List<String> = List(1000) {"Hello Android $it"}) {
     var counterState by remember{
         mutableStateOf(0)
     }
-    Column {
-        for (name in names) {
-            Greeting(name = name)
-            Divider()
-        }
+    Column(modifier = Modifier.fillMaxHeight()) {
+        NamesList(names = names, modifier = Modifier.weight(1f))
         Counter(
             count = counterState,
             updateCount = {
@@ -63,6 +62,17 @@ fun MyScreenContent(names: List<String> = listOf("Android", "There")) {
         )
         if (counterState > 5){
             Text(text = "I love to count")
+        }
+    }
+}
+
+@Composable
+fun NamesList(names: List<String>, modifier: Modifier = Modifier) {
+    // This Column can expand as much as it wants
+    LazyColumn(modifier = modifier) {
+        items(names.size) { index ->
+            Greeting(name = "$index")
+            Divider()
         }
     }
 }
