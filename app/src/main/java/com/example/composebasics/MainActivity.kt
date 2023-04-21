@@ -3,7 +3,10 @@ package com.example.composebasics
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,11 +89,22 @@ fun Counter(count: Int, updateCount: (Int) -> Unit){
 
 @Composable
 fun Greeting(name: String) {
-    // the modifier's order of chaining matters
-    Text(
-        text = "Hello $name!",
-        modifier = Modifier.padding(16.dp)
+    var isSelected by remember {
+        mutableStateOf(false)
+    }
+    val targetColor by animateColorAsState(
+        targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+        animationSpec = tween(1000)
     )
+    Surface(color = targetColor) {
+        // the modifier's order of chaining matters
+        Text(
+            text = "Hello $name!",
+            modifier = Modifier
+                .clickable { isSelected = !isSelected }
+                .padding(16.dp)
+        )
+    }
 }
 
 //@Preview(fontScale = 1.5f)
